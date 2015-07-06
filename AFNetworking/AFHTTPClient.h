@@ -96,6 +96,7 @@ typedef enum {
     AFFormURLParameterEncoding,
     AFJSONParameterEncoding,
     AFPropertyListParameterEncoding,
+    AFPostGZipParameterEncoding
 } AFHTTPClientParameterEncoding;
 
 @class AFHTTPRequestOperation;

@@ -507,6 +507,19 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
                     [request setValue:[NSString stringWithFormat:@"application/x-plist; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
                     [request setHTTPBody:[NSPropertyListSerialization dataWithPropertyList:parameters format:NSPropertyListXMLFormat_v1_0 options:0 error:&error]];
                     break;
+                case AFPostGZipParameterEncoding:;
+                    [request setValue:[NSString stringWithFormat:@"text/plain; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
+                    // TODO: Gizp post
+                    NSData *data = [parameters objectForKey:@"footmark"];
+                    NSMutableDictionary *params = [parameters mutableCopy];
+                    [params removeObjectForKey:@"footmark"];
+                    
+                    url = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[path rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", AFQueryStringFromParametersWithEncoding(params, self.stringEncoding)]];
+                    [request setURL:url];
+                    
+                    if (data && [data isKindOfClass:[NSData class]]) {
+                        [request setHTTPBody:data];
+                    }
             }
 
             if (error) {
