@@ -294,7 +294,7 @@ NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
 #ifdef _AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES_
     self.allowsInvalidSSLCertificate = YES;
 #endif
-    
+
     return self;
 }
 
@@ -463,6 +463,12 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
 	[self.defaultHeaders removeObjectForKey:@"Authorization"];
 }
 
+- (void)setSpecialBaseUrl:(NSURL *)url {
+    if (url && [url isKindOfClass:[NSURL class]]) {
+        self.baseURL = url;
+    }
+}
+
 #pragma mark -
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
@@ -553,7 +559,7 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
                                                     failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
     AFHTTPRequestOperation *operation = nil;
-    
+
     for (NSString *className in self.registeredHTTPOperationClassNames) {
         Class operationClass = NSClassFromString(className);
         if (operationClass && [operationClass canProcessRequest:urlRequest]) {
@@ -866,7 +872,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
     NSString *fileName = [fileURL lastPathComponent];
     NSString *mimeType = AFContentTypeForPathExtension([fileURL pathExtension]);
-    
+
     return [self appendPartWithFileURL:fileURL name:name fileName:fileName mimeType:mimeType error:error];
 }
 
